@@ -19,6 +19,8 @@ import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+
 import javax.swing.border.LineBorder;
 import javax.swing.ImageIcon;
 import javax.swing.JSplitPane;
@@ -29,6 +31,7 @@ import javax.swing.JList;
 public class Home extends JFrame {
 
 	private JPanel contentPane;
+	int xx,xy;
 
 	/**
 	 * Launch the application.
@@ -65,19 +68,34 @@ public class Home extends JFrame {
 		contentPane.add(separator);
 		
 		JLabel lblNewLabel_1 = new JLabel("");
-		lblNewLabel_1.setBounds(197, 112, 262, 293);
+		lblNewLabel_1.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				int x = e.getXOnScreen();
+		        int y = e.getYOnScreen();
+		       Home.this.setLocation(x - xx, y - xy); 
+			}
+		});
+		lblNewLabel_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				 xx = e.getX();
+			     xy = e.getY();
+			}
+		});
+		lblNewLabel_1.setBounds(198, 112, 262, 293);
 		lblNewLabel_1.setIcon(new ImageIcon(Home.class.getResource("/images/money (2).png")));
 		lblNewLabel_1.setBackground(new Color(255, 255, 255));
 		contentPane.add(lblNewLabel_1);
 		
 		JLabel lblNewLabel_2 = new JLabel("KBOX AUCTIONS ");
-		lblNewLabel_2.setBounds(170, 24, 358, 56);
+		lblNewLabel_2.setBounds(168, 25, 314, 56);
 		lblNewLabel_2.setFont(new Font("Monospaced", Font.BOLD, 36));
 		contentPane.add(lblNewLabel_2);
 		
 		Panel panel = new Panel();
+		panel.setBounds(100, 495, 108, 44);
 		panel.setBackground(new Color(0, 0, 0));
-		panel.setBounds(80, 495, 108, 44);
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
@@ -116,9 +134,9 @@ public class Home extends JFrame {
 		lblLogin.setBackground(new Color(255, 250, 205));
 		
 		Panel panel_1 = new Panel();
+		panel_1.setBounds(258, 495, 135, 44);
 		panel_1.setLayout(null);
 		panel_1.setBackground(Color.BLACK);
-		panel_1.setBounds(248, 495, 135, 44);
 		contentPane.add(panel_1);
 		
 		Panel panel_2_1 = new Panel();
@@ -155,9 +173,9 @@ public class Home extends JFrame {
 		panel_2_1.add(lblRegister);
 		
 		Panel panel_3 = new Panel();
+		panel_3.setBounds(442, 495, 108, 44);
 		panel_3.setLayout(null);
 		panel_3.setBackground(Color.BLACK);
-		panel_3.setBounds(433, 495, 108, 44);
 		contentPane.add(panel_3);
 		
 		Panel panel_2_2 = new Panel();
@@ -195,6 +213,7 @@ public class Home extends JFrame {
 		panel_2_2.add(lblAbout);
 		
 		JLabel lblX = new JLabel(" X");
+		lblX.setBounds(590, 13, 30, 34);
 		lblX.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -212,7 +231,6 @@ public class Home extends JFrame {
 		lblX.setForeground(Color.BLACK);
 		lblX.setFont(new Font("Broadway", Font.BOLD, 20));
 		lblX.setBackground(new Color(0, 0, 139));
-		lblX.setBounds(590, 13, 30, 34);
 		contentPane.add(lblX);
 		
 		

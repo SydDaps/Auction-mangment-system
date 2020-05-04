@@ -12,6 +12,7 @@ import javax.swing.ImageIcon;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.Panel;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
@@ -21,6 +22,7 @@ public class Login extends JFrame {
 	private JPanel contentPane;
 	private JTextField textField;
 	private JPasswordField passwordField;
+	int xx,xy;
 
 	/**
 	 * Launch the application.
@@ -54,6 +56,21 @@ public class Login extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				int x = e.getXOnScreen();
+		        int y = e.getYOnScreen();
+		       Login.this.setLocation(x - xx, y - xy); 
+			}
+		});
+		lblNewLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				 xx = e.getX();
+			     xy = e.getY();
+			}
+		});
 		lblNewLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {

@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -16,6 +17,7 @@ import javax.swing.border.LineBorder;
 public class HandleErr extends JFrame {
 
 	private JPanel contentPane;
+	int xx,xy;
 
 	/**
 	 * Launch the application.
@@ -49,13 +51,19 @@ public class HandleErr extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				int x = e.getXOnScreen();
+		        int y = e.getYOnScreen();
+		       HandleErr.this.setLocation(x - xx, y - xy); 
+			}
+		});
 		lblNewLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				dispose();
-				Home home = new Home();
-				home.setUndecorated(true);	
-				home.setVisible(true);
+			public void mousePressed(MouseEvent e) {
+				 xx = e.getX();
+			     xy = e.getY();
 			}
 		});
 		lblNewLabel.setIcon(new ImageIcon(Register.class.getResource("/images/trade (4).png")));
@@ -83,13 +91,6 @@ public class HandleErr extends JFrame {
 		lblX.setBounds(540, 13, 30, 34);
 		contentPane.add(lblX);
 		
-		JLabel lblX_1 = new JLabel(" -");
-		lblX_1.setHorizontalAlignment(SwingConstants.LEFT);
-		lblX_1.setForeground(Color.BLACK);
-		lblX_1.setFont(new Font("Broadway", Font.BOLD, 20));
-		lblX_1.setBackground(new Color(0, 0, 139));
-		lblX_1.setBounds(502, 13, 30, 34);
-		contentPane.add(lblX_1);
 	}
 
 }

@@ -56,6 +56,21 @@ public class Bidding extends JFrame {
 		contentPane.setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("");
+		lblNewLabel.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				int x = e.getXOnScreen();
+		        int y = e.getYOnScreen();
+		       Bidding.this.setLocation(x - xx, y - xy); 
+			}
+		});
+		lblNewLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				 xx = e.getX();
+			     xy = e.getY();
+			}
+		});
 		lblNewLabel.setIcon(new ImageIcon(Items.class.getResource("/images/money (1).png")));
 		lblNewLabel.setBounds(26, 13, 69, 72);
 		contentPane.add(lblNewLabel);
@@ -83,21 +98,6 @@ public class Bidding extends JFrame {
 		contentPane.add(lblX);
 		
 		JLabel lblNewLabel_1 = new JLabel(" BIDINGS");
-		lblNewLabel_1.addMouseMotionListener(new MouseMotionAdapter() {
-			@Override
-			public void mouseDragged(MouseEvent e) {
-				int x = e.getXOnScreen();
-		        int y = e.getYOnScreen();
-		       Bidding.this.setLocation(x - xx, y - xy); 
-			}
-		});
-		lblNewLabel_1.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mousePressed(MouseEvent e) {
-				 xx = e.getX();
-			     xy = e.getY();
-			}
-		});
 		lblNewLabel_1.setFont(new Font("Monospaced", Font.BOLD, 40));
 		lblNewLabel_1.setBounds(648, 26, 213, 59);
 		contentPane.add(lblNewLabel_1);
