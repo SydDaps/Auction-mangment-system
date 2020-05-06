@@ -1,28 +1,35 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Panel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.JList;
+
+import com.sun.javafx.tk.Toolkit;
+
 import java.awt.TextArea;
-import javax.swing.JTextField;
 import java.awt.event.MouseMotionAdapter;
+import javax.swing.*;
+import javax.swing.Timer;
+
+import java.text.*;
+import java.awt.Button;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.util.*;
+
 
 public class Bidding extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField textField;
-	int xx,xy;
+	public Timer timer;
+	int xx,xy,min,sec,stop;
 
 	/**
 	 * Launch the application.
@@ -33,7 +40,9 @@ public class Bidding extends JFrame {
 				try {
 					
 					Bidding frame = new Bidding("2","NOT FOUND!","$ 00000,000");
+					
 					frame.setUndecorated(true);
+					frame.setState(frame.NORMAL);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -98,6 +107,12 @@ public class Bidding extends JFrame {
 		contentPane.add(lblX);
 		
 		JLabel lblNewLabel_1 = new JLabel(" BIDINGS");
+		lblNewLabel_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+			}
+		});
 		lblNewLabel_1.setFont(new Font("Monospaced", Font.BOLD, 40));
 		lblNewLabel_1.setBounds(648, 26, 213, 59);
 		contentPane.add(lblNewLabel_1);
@@ -145,9 +160,9 @@ public class Bidding extends JFrame {
 		lblNewLabel_4.setBounds(5, 5, 527, 50);
 		panel_4_2.add(lblNewLabel_4);
 		
-		JLabel lblNewLabel_4_1 = new JLabel("   TIME LEFT : 0 : 00");
+		JLabel lblNewLabel_4_1 = new JLabel("   TIME LEFT : \r\n");
 		lblNewLabel_4_1.setFont(new Font("Monospaced", Font.BOLD, 20));
-		lblNewLabel_4_1.setBounds(5, 42, 527, 50);
+		lblNewLabel_4_1.setBounds(5, 42, 180, 50);
 		panel_4_2.add(lblNewLabel_4_1);
 		
 		JLabel lblNewLabel_4_2 = new JLabel(addStartBid(bid));
@@ -191,22 +206,10 @@ public class Bidding extends JFrame {
 		panel_3_1_1.setBounds(5, 5, 140, 36);
 		panel_2_1_1.add(panel_3_1_1);
 		
-		JLabel lblNewLabel_3_1_1 = new JLabel(" PLACE BID");
-		lblNewLabel_3_1_1.addMouseListener(new MouseAdapter() {
-			public void mouseEntered(MouseEvent e) {
-				 panel_2_1_1.setBackground(Color.WHITE);	
-				 panel_3_1_1.setBackground(new Color(238, 232, 170));
-			}
-			@Override
-			public void mouseExited(MouseEvent e) {
-				panel_2_1_1.setBackground(Color.BLACK);
-				panel_3_1_1.setBackground(new Color(255, 250, 205));
-			}
-		});
-		lblNewLabel_3_1_1.setHorizontalAlignment(SwingConstants.LEFT);
-		lblNewLabel_3_1_1.setFont(new Font("Monospaced", Font.BOLD, 20));
-		lblNewLabel_3_1_1.setBounds(0, 0, 140, 36);
-		panel_3_1_1.add(lblNewLabel_3_1_1);
+		JLabel lblNewLabel_4_1_1 = new JLabel("0:00:0\r\n");
+		lblNewLabel_4_1_1.setFont(new Font("Monospaced", Font.BOLD, 30));
+		lblNewLabel_4_1_1.setBounds(178, 42, 180, 50);
+		panel_4_2.add(lblNewLabel_4_1_1);
 		
 		Panel panel_4_1_1 = new Panel();
 		panel_4_1_1.setBackground(Color.BLACK);
@@ -219,6 +222,46 @@ public class Bidding extends JFrame {
 		panel_4_2_1.setLayout(null);
 		panel_4_2_1.setBackground(new Color(255, 250, 205));
 		panel_4_1_1.add(panel_4_2_1);
+		
+		Button button = new Button(" PLACE BID\r\n");
+		min = 2;
+		sec = 60;
+		button.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent arg0) {
+					
+		       timer = new Timer(100, new ActionListener() {
+		    	      @Override
+			          public void actionPerformed(ActionEvent e) {
+		    	    	 
+		    	    	sec = sec - 1;
+		    	    	if(sec == 0) {
+		    	    		min = min - 1;
+		    	    		sec = 59;
+		    	    	}
+		    	    	
+		    	      
+		    	    if(min == 0) {
+		    	    	sec = 00;
+		    	    	timer.stop();
+		    	    }
+		    	    
+		    	    String time = min + " : " + sec;
+			        lblNewLabel_4_1_1.setText(time);
+			        
+			          }
+			       });
+		       timer.start();
+		        
+			}}
+		);
+		button.setBackground(new Color(255, 250, 205));
+		button.setForeground(Color.BLACK);
+		button.setFont(new Font("Monospaced", Font.BOLD, 20));
+		button.setBounds(0, 0, 140, 36);
+		panel_3_1_1.add(button);
+		
+	
 		
 		JLabel lblNewLabel_5 = new JLabel("HIGHEST BIDS \r\n");
 		lblNewLabel_5.setHorizontalAlignment(SwingConstants.CENTER);
@@ -352,5 +395,7 @@ public class Bidding extends JFrame {
 		return bid = "   START BID : "+bid;
 		
 	}
+  
+	
 	
 }

@@ -96,7 +96,7 @@ public class Items extends JFrame {
 		lblX.setBounds(1579, 13, 30, 34);
 		contentPane.add(lblX);
 		
-		JLabel lblNewLabel_1 = new JLabel(" AUCTION Items");
+		JLabel lblNewLabel_1 = new JLabel(" AUCTION ITEMS");
 		lblNewLabel_1.setFont(new Font("Monospaced", Font.BOLD, 40));
 		lblNewLabel_1.setBounds(547, 26, 365, 59);
 		contentPane.add(lblNewLabel_1);
