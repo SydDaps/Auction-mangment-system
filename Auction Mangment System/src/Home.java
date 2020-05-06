@@ -105,7 +105,7 @@ public class Home extends JFrame {
 		panel.add(panel_2);
 		panel_2.setLayout(null);
 		
-		JLabel lblLogin = new JLabel("  LOGIN");
+		JLabel lblLogin = new JLabel(" LOGIN");
 		lblLogin.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -130,7 +130,7 @@ public class Home extends JFrame {
 		lblLogin.setBounds(0, 0, 98, 34);
 		panel_2.add(lblLogin);
 		lblLogin.setForeground(Color.BLACK);
-		lblLogin.setFont(new Font("Monospaced", Font.BOLD, 20));
+		lblLogin.setFont(new Font("Monospaced", Font.BOLD, 22));
 		lblLogin.setBackground(new Color(255, 250, 205));
 		
 		Panel panel_1 = new Panel();
@@ -167,7 +167,7 @@ public class Home extends JFrame {
 		});
 		lblRegister.setHorizontalAlignment(SwingConstants.LEFT);
 		lblRegister.setForeground(Color.BLACK);
-		lblRegister.setFont(new Font("Monospaced", Font.BOLD, 20));
+		lblRegister.setFont(new Font("Monospaced", Font.BOLD, 22));
 		lblRegister.setBackground(new Color(0, 0, 139));
 		lblRegister.setBounds(0, 0, 125, 34);
 		panel_2_1.add(lblRegister);
@@ -184,7 +184,7 @@ public class Home extends JFrame {
 		panel_2_2.setBounds(5, 5, 98, 34);
 		panel_3.add(panel_2_2);
 		
-		JLabel lblAbout = new JLabel("  ABOUT");
+		JLabel lblAbout = new JLabel(" ABOUT");
 		lblAbout.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -207,7 +207,7 @@ public class Home extends JFrame {
 		});
 		lblAbout.setHorizontalAlignment(SwingConstants.LEFT);
 		lblAbout.setForeground(Color.BLACK);
-		lblAbout.setFont(new Font("Monospaced", Font.BOLD, 20));
+		lblAbout.setFont(new Font("Monospaced", Font.BOLD, 22));
 		lblAbout.setBackground(new Color(0, 0, 139));
 		lblAbout.setBounds(0, 0, 98, 34);
 		panel_2_2.add(lblAbout);
