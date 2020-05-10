@@ -81,7 +81,7 @@ public class HandleErr extends JFrame {
 		lblX.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.exit(0);		
+				dispose();	
 				}
 		});
 		lblX.setHorizontalAlignment(SwingConstants.LEFT);

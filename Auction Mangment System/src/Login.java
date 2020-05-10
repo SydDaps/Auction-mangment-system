@@ -13,6 +13,12 @@ import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.awt.Panel;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
@@ -20,9 +26,10 @@ import javax.swing.JPasswordField;
 public class Login extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
-	private JPasswordField passwordField;
+	private JTextField userNameField;
+	private JPasswordField userPasswordField;
 	int xx,xy;
+	Connection con;
 
 	/**
 	 * Launch the application.
@@ -121,12 +128,12 @@ public class Login extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
-		textField = new JTextField();
-		textField.setForeground(new Color(0, 0, 0));
-		textField.setFont(new Font("Bradley Hand ITC", Font.BOLD, 17));
-		textField.setBounds(3, 3, 459, 40);
-		panel.add(textField);
-		textField.setColumns(10);
+		userNameField = new JTextField();
+		userNameField.setForeground(new Color(0, 0, 0));
+		userNameField.setFont(new Font("Bradley Hand ITC", Font.BOLD, 17));
+		userNameField.setBounds(3, 3, 459, 40);
+		panel.add(userNameField);
+		userNameField.setColumns(10);
 		
 		JLabel lblNewLabel_2_1 = new JLabel("PASSWORD :");
 		lblNewLabel_2_1.setFont(new Font("Monospaced", Font.BOLD, 20));
@@ -139,9 +146,9 @@ public class Login extends JFrame {
 		panel_1.setBounds(102, 298, 465, 46);
 		contentPane.add(panel_1);
 		
-		passwordField = new JPasswordField();
-		passwordField.setBounds(3, 3, 459, 40);
-		panel_1.add(passwordField);
+		userPasswordField = new JPasswordField();
+		userPasswordField.setBounds(3, 3, 459, 40);
+		panel_1.add(userPasswordField);
 		
 		Panel panel_2 = new Panel();
 		panel_2.setLayout(null);
@@ -166,10 +173,83 @@ public class Login extends JFrame {
 			public void mouseExited(MouseEvent e) {
 			panel_2.setBackground(Color.BLACK);
 			panel_3.setBackground(new Color(255, 250, 205));
-			}		});
+			}			
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+			logCustomerIn();	
+			}
+		});
 		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_3.setFont(new Font("Monospaced", Font.BOLD, 20));
 		lblNewLabel_3.setBounds(0, 0, 140, 37);
 		panel_3.add(lblNewLabel_3);
+	}
+	
+	public void logCustomerIn() {
+		String name = null;
+		String password = null;
+		int ID = 0;
+		createConnection();
+		
+	  
+	try {
+		
+		String userName = userNameField.getText();
+		String userPassword = new String(userPasswordField.getPassword());
+	    if(userName.isEmpty() || userPasswordField.getPassword().length == 0 ) {
+			handleErr("Enter all TextFields");
+			return;
+		}
+	    
+	    
+		Statement state = con.createStatement();
+		ResultSet user = state.executeQuery("select * from customers where cusName = '"+ userName +"'");
+		while(user.next()) {
+			  name =	user.getString("cusName");
+			  password = user.getString("cusPassword"); 
+			  ID = user.getInt("cusID");
+			}
+		if(name == null || !userPassword.equals(password)) {
+			handleErr("Username or \n password  incorrect");
+			return;
+		}
+		PreparedStatement prestate = con.prepareStatement("UPDATE Customers SET  isCusLoggedIn = ?  WHERE cusID = ?");
+		prestate.setBoolean(1, true);
+		prestate.setInt(2, ID);
+		prestate.execute();
+		callItemsframe();
+		
+	   System.out.println("loggedin");
+	} catch (SQLException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+		
+	   
+	}
+	
+	public void handleErr(String msg) {
+		HandleErr frame = new HandleErr(msg);
+		frame.setUndecorated(true);
+		frame.setVisible(true);
+		
+	}
+	
+	public void createConnection(){
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/auction","root","root"); 
+			System.out.println("DATABASE CONNECTED SUCCESS");
+		} catch (ClassNotFoundException | SQLException  e) {
+			System.out.println(e);
+			e.printStackTrace();
+		}  
+	}
+	
+	public void callItemsframe() {
+		dispose();
+		Items frame = new Items();
+		frame.setUndecorated(true);
+		frame.setVisible(true);
 	}
 }

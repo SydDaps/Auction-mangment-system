@@ -6,6 +6,12 @@ import java.awt.Panel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -20,10 +26,11 @@ import javax.swing.border.LineBorder;
 public class Register extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
-	private JPasswordField passwordField;
-	private JPasswordField passwordField_1;
+	private JTextField userNameField;
+	private JPasswordField userPasswordField;
+	private JPasswordField userPasswordCheckField;
 	int xx,xy;
+	Connection con;
 	/**
 	 * Launch the application.
 	 */
@@ -120,12 +127,12 @@ public class Register extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
-		textField = new JTextField();
-		textField.setForeground(new Color(0, 0, 0));
-		textField.setFont(new Font("Bradley Hand ITC", Font.BOLD, 17));
-		textField.setBounds(3, 3, 459, 40);
-		panel.add(textField);
-		textField.setColumns(10);
+		userNameField = new JTextField();
+		userNameField.setForeground(new Color(0, 0, 0));
+		userNameField.setFont(new Font("Bradley Hand ITC", Font.BOLD, 17));
+		userNameField.setBounds(3, 3, 459, 40);
+		panel.add(userNameField);
+		userNameField.setColumns(10);
 		
 		JLabel lblNewLabel_2_1 = new JLabel("PASSWORD :");
 		lblNewLabel_2_1.setFont(new Font("Monospaced", Font.BOLD, 20));
@@ -138,9 +145,9 @@ public class Register extends JFrame {
 		panel_1.setBounds(102, 272, 465, 46);
 		contentPane.add(panel_1);
 		
-		passwordField = new JPasswordField();
-		passwordField.setBounds(3, 3, 459, 40);
-		panel_1.add(passwordField);
+		userPasswordField = new JPasswordField();
+		userPasswordField.setBounds(3, 3, 459, 40);
+		panel_1.add(userPasswordField);
 		
 		Panel panel_2 = new Panel();
 		panel_2.setLayout(null);
@@ -165,7 +172,15 @@ public class Register extends JFrame {
 			public void mouseExited(MouseEvent e) {
 			panel_2.setBackground(Color.BLACK);
 			panel_3.setBackground(new Color(255, 250, 205));
-			}		});
+			}	
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+			registerCustomer();
+				
+				
+				
+			}
+		});
 		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_3.setFont(new Font("Monospaced", Font.BOLD, 20));
 		lblNewLabel_3.setBounds(0, 0, 140, 37);
@@ -182,10 +197,79 @@ public class Register extends JFrame {
 		panel_1_1.setBounds(102, 357, 465, 46);
 		contentPane.add(panel_1_1);
 		
-		passwordField_1 = new JPasswordField();
-		passwordField_1.setBounds(3, 3, 459, 40);
-		panel_1_1.add(passwordField_1);
+		userPasswordCheckField = new JPasswordField();
+		userPasswordCheckField.setBounds(3, 3, 459, 40);
+		panel_1_1.add(userPasswordCheckField);
 	
+	}
+	
+	public void registerCustomer() {
+		 String name = null;
+		createConnection();
+        try {
+			String userName = userNameField.getText();
+			String userPassword = new String(userPasswordField.getPassword());
+			String checkPassword = new String(userPasswordCheckField.getPassword());
+			if(userName.isEmpty() || userPasswordField.getPassword().length == 0 || userPasswordCheckField.getPassword().length ==0 ) {
+				handleErr("Enter all TextFields");
+				return;
+			}
+			if(!userPassword.equals(checkPassword)) {
+				handleErr("Passwords do not Match");
+				return;
+			}
+			
+			
+	        Statement state = con.createStatement();
+			ResultSet user = state.executeQuery("select * from customers where cusName = '"+ userName +"'");
+			while(user.next()) {
+				  name =	user.getString("cusName");
+				}
+			if(name != null) {
+				handleErr("User already has an account");
+				return;
+			}
+			state.close();
+			PreparedStatement prestate = con.prepareStatement("INSERT INTO Customers (cusName,cusPassword, isCusLoggedIn) VALUES (?,?,?)");
+			prestate.setString(1, userName);
+			prestate.setString(2, userPassword);
+			prestate.setBoolean(3, true);
+			prestate.execute();
+			callItemsframe();
+			
+			System.out.println("NEW USER CREATED");
+		} catch ( SQLException e) {
+			System.out.println(e);
+			e.printStackTrace();
+		}  
+		System.out.println("here");
+	}
+	
+	
+	
+	public void handleErr(String msg) {
+		HandleErr frame = new HandleErr(msg);
+		frame.setUndecorated(true);
+		frame.setVisible(true);
+		
+	}
+	
+	public void createConnection(){
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/auction","root","root"); 
+			System.out.println("DATABASE CONNECTED SUCCESS");
+		} catch (ClassNotFoundException | SQLException  e) {
+			System.out.println(e);
+			e.printStackTrace();
+		}  
+	}
+	
+	public void callItemsframe() {
+		dispose();
+		Items frame = new Items();
+		frame.setUndecorated(true);
+		frame.setVisible(true);
 	}
 
 }
