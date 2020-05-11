@@ -205,6 +205,7 @@ public class Register extends JFrame {
 	
 	public void registerCustomer() {
 		 String name = null;
+		 int cusID = 0;
 		createConnection();
         try {
 			String userName = userNameField.getText();
@@ -229,15 +230,21 @@ public class Register extends JFrame {
 				handleErr("User already has an account");
 				return;
 			}
-			state.close();
+			
 			PreparedStatement prestate = con.prepareStatement("INSERT INTO Customers (cusName,cusPassword, isCusLoggedIn) VALUES (?,?,?)");
 			prestate.setString(1, userName);
 			prestate.setString(2, userPassword);
 			prestate.setBoolean(3, true);
 			prestate.execute();
-			callItemsframe();
+			
+			user = state.executeQuery("select * from customers where cusName = '"+ userName +"'");
+			while(user.next()) {
+				  cusID =	user.getInt("cusID");
+				}
+			callItemsframe(cusID);
 			
 			System.out.println("NEW USER CREATED");
+			state.close();
 		} catch ( SQLException e) {
 			System.out.println(e);
 			e.printStackTrace();
@@ -265,9 +272,10 @@ public class Register extends JFrame {
 		}  
 	}
 	
-	public void callItemsframe() {
+	public void callItemsframe(int cusID) {
 		dispose();
-		Items frame = new Items();
+		Items frame = new Items(cusID);
+		System.out.println(cusID);
 		frame.setUndecorated(true);
 		frame.setVisible(true);
 	}

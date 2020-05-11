@@ -1,4 +1,7 @@
 import java.awt.BorderLayout;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;  
+import java.util.Date;  
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -188,11 +191,7 @@ public class Home extends JFrame {
 		lblAbout.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				dispose();
-				String errMsg = "OOps not found!";
-				HandleErr frame = new HandleErr(errMsg);
-				frame.setUndecorated(true);
-				frame.setVisible(true);
+				DateStuff();
 			}
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
@@ -234,5 +233,34 @@ public class Home extends JFrame {
 		contentPane.add(lblX);
 		
 		
+	}
+	public void DateStuff() {
+//		 SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
+//		    Date date = new Date();  
+//		    long timeMilli = date.getTime() - ;
+//		    long time1 = 
+//		    System.out.println(formatter.format(date));  
+//		    System.out.println(timeMilli);
+		final long ONE_MINUTE_IN_MILLIS = 60000;
+		Date date = new Date();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm") ;
+		dateFormat.format(date);
+		System.out.println(dateFormat.format(date));
+		
+		long t= date.getTime();
+		Date afterAddingTenMins=new Date(t + (50 * ONE_MINUTE_IN_MILLIS));
+		System.out.println(dateFormat.format(afterAddingTenMins));
+		try {
+			if(dateFormat.parse(dateFormat.format(date)).after(dateFormat.parse("23:26")))
+			{
+			    System.out.println("Current time is greater than 11.20");
+			}else{
+			    System.out.println("Current time is less than 11.20");
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		    
 	}
 }

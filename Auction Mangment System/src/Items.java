@@ -18,20 +18,26 @@ import javax.swing.JScrollBar;
 import javax.swing.JLabel;
 import java.awt.GridLayout;
 import java.awt.event.MouseMotionAdapter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Items extends JFrame {
 
 	private JPanel contentPane;
+	
     int xx,xy;
+    Connection con;
+    int[] item = new int[100];
+    int[] sold = new int[100];
 
-	/**
-	 * Launch the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Items frame = new Items();
+					Items frame = new Items(0);
 					frame.setUndecorated(true);
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -41,10 +47,13 @@ public class Items extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 */
-	public Items() {
+	
+	public Items(int cusID) {
+		
+		checkAndRelpaceItem();
+		
+		
+		
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1650, 1000);
@@ -120,8 +129,8 @@ public class Items extends JFrame {
 		panel_1.add(panel_4);
 		panel_4.setLayout(null);
 		
-		JLabel lblNewLabel_2 = new JLabel("");
-		lblNewLabel_2.addMouseListener(new MouseAdapter() {
+		JLabel itemLable_1 = new JLabel("");
+		itemLable_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				panel_1.setBackground(Color.WHITE);	
@@ -132,12 +141,12 @@ public class Items extends JFrame {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				callBiddingFrame("1","1954 Type Writer","$6,000,000");	
+				callBiddingFrame(item[1],cusID);	
 			}
 		});
-		lblNewLabel_2.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/type.jpg")));
-		lblNewLabel_2.setBounds(0, 0, 290, 190);
-		panel_4.add(lblNewLabel_2);
+		itemLable_1.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/"+item[1]+".jpg")));
+		itemLable_1.setBounds(0, 0, 290, 190);
+		panel_4.add(itemLable_1);
 		
 		Panel panel_1_1 = new Panel();
 		panel_1_1.setLayout(null);
@@ -151,8 +160,8 @@ public class Items extends JFrame {
 		panel_4_1.setBounds(5, 5, 290, 190);
 		panel_1_1.add(panel_4_1);
 		
-		JLabel lblNewLabel_2_2_1 = new JLabel("");
-		lblNewLabel_2_2_1.addMouseListener(new MouseAdapter() {
+		JLabel itemLable_2 = new JLabel("");
+		itemLable_2.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				panel_1_1.setBackground(Color.WHITE);
@@ -163,13 +172,12 @@ public class Items extends JFrame {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
-				callBiddingFrame("2","Talbot Lago Grand Sport","$ 5,000,000");
+				callBiddingFrame(item[2],cusID);	
 			}
 		});
-		lblNewLabel_2_2_1.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/car.jpg")));
-		lblNewLabel_2_2_1.setBounds(0, 0, 290, 190);
-		panel_4_1.add(lblNewLabel_2_2_1);
+		itemLable_2.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/"+item[2]+".jpg")));
+		itemLable_2.setBounds(0, 0, 290, 190);
+		panel_4_1.add(itemLable_2);
 		
 		Panel panel_1_2 = new Panel();
 		panel_1_2.setLayout(null);
@@ -183,8 +191,8 @@ public class Items extends JFrame {
 		panel_4_2.setBounds(5, 5, 290, 190);
 		panel_1_2.add(panel_4_2);
 		
-		JLabel lblNewLabel_2_2 = new JLabel("");
-		lblNewLabel_2_2.addMouseListener(new MouseAdapter() {
+		JLabel itemLable_3 = new JLabel("");
+		itemLable_3.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				panel_1_2.setBackground(Color.WHITE);
@@ -195,12 +203,12 @@ public class Items extends JFrame {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				callBiddingFrame("3","Lebron Retro Nikes","$60,000");
+				callBiddingFrame(item[3],cusID);
 			}
 		});
-		lblNewLabel_2_2.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/fineass.jpeg")));
-		lblNewLabel_2_2.setBounds(0, 0, 290, 190);
-		panel_4_2.add(lblNewLabel_2_2);
+		itemLable_3.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/"+item[3]+".jpg")));
+		itemLable_3.setBounds(0, 0, 290, 190);
+		panel_4_2.add(itemLable_3);
 		
 		Panel panel_1_3 = new Panel();
 		panel_1_3.setLayout(null);
@@ -214,8 +222,8 @@ public class Items extends JFrame {
 		panel_4_3.setBounds(5, 5, 290, 190);
 		panel_1_3.add(panel_4_3);
 		
-		JLabel lblNewLabel_2_3 = new JLabel("");
-		lblNewLabel_2_3.addMouseListener(new MouseAdapter() {
+		JLabel itemLable_4 = new JLabel("");
+		itemLable_4.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				panel_1_3.setBackground(Color.WHITE);
@@ -226,12 +234,12 @@ public class Items extends JFrame {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				callBiddingFrame("4","1968 SHELBY GREEN HORNET","$30,000,000");	
+				callBiddingFrame(item[4],cusID);		
 			}
 		});
-		lblNewLabel_2_3.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/mustang.jpg")));
-		lblNewLabel_2_3.setBounds(0, 0, 290, 190);
-		panel_4_3.add(lblNewLabel_2_3);
+		itemLable_4.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/"+item[4]+".jpg")));
+		itemLable_4.setBounds(0, 0, 290, 190);
+		panel_4_3.add(itemLable_4);
 		
 		Panel panel_1_4 = new Panel();
 		panel_1_4.setLayout(null);
@@ -258,10 +266,10 @@ public class Items extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				
-				callBiddingFrame("5","Dr Mills First Radio","$ 7,000,000");
+				
 			}
 		});
-		lblNewLabel_2_7.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/radio.jpg")));
+		lblNewLabel_2_7.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/5.jpg")));
 		lblNewLabel_2_7.setBounds(0, 0, 290, 190);
 		panel_4_7.add(lblNewLabel_2_7);
 		
@@ -316,10 +324,10 @@ public class Items extends JFrame {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				callBiddingFrame("7","Game Boy","$ 700,00");
+				
 			}
 		});
-		lblNewLabel_2_6_4.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/game boy.jpg")));
+		lblNewLabel_2_6_4.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/7.jpg")));
 		lblNewLabel_2_6_4.setBounds(0, 0, 290, 190);
 		panel_4_5.add(lblNewLabel_2_6_4);
 		
@@ -375,7 +383,7 @@ public class Items extends JFrame {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				callBiddingFrame("9","First Telephone in Ghana","$ 700,00");
+				
 			}
 		});
 		lblNewLabel_2_8.setBounds(0, 0, 290, 190);
@@ -460,7 +468,7 @@ public class Items extends JFrame {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				callBiddingFrame("12","First IBM Computer","$60,000");
+				
 			}
 		});
 		lblNewLabel_2_6_3.setBounds(0, 0, 290, 190);
@@ -529,11 +537,93 @@ public class Items extends JFrame {
 		
 	 
 	}
-	public void callBiddingFrame(String imgNumber ,String itemName,String itemStartBid) {
-		dispose();
-		Bidding frame = new Bidding(imgNumber,itemName,itemStartBid);
+	public void checkAndRelpaceItem() {
+		createConnection();
+		int num = 1;
+		int num2 = 1;
+		int start = 1;
+		int[] tryy = {11,12,13,14,15,16,17,18,10,10};
+		
+		try {
+			Statement state = con.createStatement();
+			ResultSet soldItems = state.executeQuery("SELECT timeKeeper.itemID,  aucItems.itemID, timeKeeper.isSold"
+					+ " FROM (timeKeeper "
+					+ "INNER JOIN aucItems ON timeKeeper.itemID = aucItems.itemID)"
+					+ " where isSold = true");
+            while(soldItems.next()) {
+            	tryy[num2] = soldItems.getInt("itemID");
+            	System.out.println(num2+" 333= "+tryy[num2]);
+            	num2++;
+            	}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			ResultSet items = state.executeQuery("select * from aucitems where onScreenNow = true");
+            while(items.next()) {
+            	item[num] = items.getInt("itemID");
+            	System.out.println(num + " = "+item[num]);
+            	num++;
+            	}
+            	
+            	
+            	
+            
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void callBiddingFrame(int itemID,int cusID) {
+		String itemName = null;
+		double itemStartPrice = 0.0;
+		createConnection();
+		
+		
+		try {
+			Statement state = con.createStatement();
+			ResultSet item = state.executeQuery("select * from aucitems where itemID = '"+ itemID +"'");
+			
+			while(item.next()) {
+				  itemName = item.getString("itemName");
+				  itemStartPrice = item.getDouble("itemPrice");
+				}
+		   state.close();
+		   dispose();
+		   Bidding frame = new Bidding(itemID,itemName,itemStartPrice,cusID);
+		   frame.setUndecorated(true);
+		   frame.setVisible(true);
+		   frame.highestBids(itemID);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void handleErr(String msg) {
+		HandleErr frame = new HandleErr(msg);
 		frame.setUndecorated(true);
 		frame.setVisible(true);
+		
 	}
+	
+	public void createConnection(){
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/auction","root","root"); 
+		
+		} catch (ClassNotFoundException | SQLException  e) {
+			System.out.println(e);
+			e.printStackTrace();
+		}  
+	}
+	
 	
 	}

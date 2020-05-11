@@ -14,6 +14,13 @@ import com.sun.javafx.tk.Toolkit;
 
 import java.awt.TextArea;
 import java.awt.event.MouseMotionAdapter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import javax.swing.*;
 import javax.swing.Timer;
 
@@ -27,10 +34,16 @@ import java.util.*;
 public class Bidding extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
+	private JTextField bidField;
 	public Timer timer;
 	int xx,xy,min,sec,stop;
-
+	Connection con;
+    JLabel Highest_1,Highest_2 ,Highest_3, startTime , endTime ;
+    long ONE_MINUTE_IN_MILLIS;
+    Date date ,currentAfterAdded;
+    SimpleDateFormat dateFormat;
+    Button placeBidButton;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -39,10 +52,9 @@ public class Bidding extends JFrame {
 			public void run() {
 				try {
 					
-					Bidding frame = new Bidding("2","NOT FOUND!","$ 00000,000");
+					Bidding frame = new Bidding(2,"NOT FOUND!",66.9,2);
 					
 					frame.setUndecorated(true);
-					frame.setState(frame.NORMAL);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -54,7 +66,8 @@ public class Bidding extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Bidding(String imgNumber, String itemName, String bid) {
+	public Bidding(int itemID, String itemName,double startPrice,int cusID) {
+		
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1650, 850);
@@ -137,7 +150,7 @@ public class Bidding extends JFrame {
 		panel_4.setLayout(null);
 		
 		JLabel lblNewLabel_2 = new JLabel("New label");
-		String imgName = "/images/bigItems/"+imgNumber+".jpg";
+		String imgName = "/images/bigItems/"+itemID+".jpg";
 		lblNewLabel_2.setIcon(new ImageIcon(Bidding.class.getResource(imgName)));
 		lblNewLabel_2.setBounds(0, 0, 640, 540);
 		panel_4.add(lblNewLabel_2);
@@ -160,12 +173,12 @@ public class Bidding extends JFrame {
 		lblNewLabel_4.setBounds(5, 5, 527, 50);
 		panel_4_2.add(lblNewLabel_4);
 		
-		JLabel lblNewLabel_4_1 = new JLabel("   TIME LEFT : \r\n");
-		lblNewLabel_4_1.setFont(new Font("Monospaced", Font.BOLD, 20));
-		lblNewLabel_4_1.setBounds(5, 42, 180, 50);
-		panel_4_2.add(lblNewLabel_4_1);
+		JLabel startLable = new JLabel("  STARTED :\r\n");
+		startLable.setFont(new Font("Monospaced", Font.BOLD, 20));
+		startLable.setBounds(5, 42, 137, 50);
+		panel_4_2.add(startLable);
 		
-		JLabel lblNewLabel_4_2 = new JLabel(addStartBid(bid));
+		JLabel lblNewLabel_4_2 = new JLabel(addStartBid(startPrice));
 		lblNewLabel_4_2.setFont(new Font("Monospaced", Font.BOLD, 20));
 		lblNewLabel_4_2.setBounds(5, 79, 417, 50);
 		panel_4_2.add(lblNewLabel_4_2);
@@ -187,12 +200,11 @@ public class Bidding extends JFrame {
 		panel_5.add(panel_6);
 		panel_6.setLayout(null);
 		
-		textField = new JTextField();
-		textField.setText(" $\r\n");
-		textField.setFont(new Font("Monospaced", Font.BOLD, 20));
-		textField.setBounds(0, 0, 226, 36);
-		panel_6.add(textField);
-		textField.setColumns(10);
+		bidField = new JTextField();
+		bidField.setFont(new Font("Monospaced", Font.BOLD, 20));
+		bidField.setBounds(0, 0, 226, 36);
+		panel_6.add(bidField);
+		bidField.setColumns(10);
 		
 		Panel panel_2_1_1 = new Panel();
 		panel_2_1_1.setLayout(null);
@@ -206,10 +218,15 @@ public class Bidding extends JFrame {
 		panel_3_1_1.setBounds(5, 5, 140, 36);
 		panel_2_1_1.add(panel_3_1_1);
 		
-		JLabel lblNewLabel_4_1_1 = new JLabel("0:00:0\r\n");
-		lblNewLabel_4_1_1.setFont(new Font("Monospaced", Font.BOLD, 30));
-		lblNewLabel_4_1_1.setBounds(178, 42, 180, 50);
-		panel_4_2.add(lblNewLabel_4_1_1);
+		startTime = new JLabel("");
+		startTime.setFont(new Font("Monospaced", Font.BOLD, 30));
+		startTime.setBounds(142, 42, 179, 50);
+		panel_4_2.add(startTime);
+		
+		endTime = new JLabel("");
+		endTime.setFont(new Font("Monospaced", Font.BOLD, 30));
+		endTime.setBounds(484, 42, 144, 50);
+		panel_4_2.add(endTime);
 		
 		Panel panel_4_1_1 = new Panel();
 		panel_4_1_1.setBackground(Color.BLACK);
@@ -223,43 +240,48 @@ public class Bidding extends JFrame {
 		panel_4_2_1.setBackground(new Color(255, 250, 205));
 		panel_4_1_1.add(panel_4_2_1);
 		
-		Button button = new Button(" PLACE BID\r\n");
+		placeBidButton = new Button(" PLACE BID\r\n");
+		placeBidButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				//highestBids(itemID);
+			}
+		});
 		min = 2;
 		sec = 60;
-		button.addActionListener(new ActionListener() {
-
+		placeBidButton.addActionListener(new ActionListener() {
+ 
 			public void actionPerformed(ActionEvent arg0) {
-					
-		       timer = new Timer(100, new ActionListener() {
-		    	      @Override
-			          public void actionPerformed(ActionEvent e) {
-		    	    	 
-		    	    	sec = sec - 1;
-		    	    	if(sec == 0) {
-		    	    		min = min - 1;
-		    	    		sec = 59;
-		    	    	}
-		    	    	
-		    	      
-		    	    if(min == 0) {
-		    	    	sec = 00;
-		    	    	timer.stop();
-		    	    }
-		    	    
-		    	    String time = min + " : " + sec;
-			        lblNewLabel_4_1_1.setText(time);
-			        
-			          }
-			       });
-		       timer.start();
-		        
+				if(placeBidButton.getLabel().equals(" PLACE BID\r\n")) {
+					placeBid(itemID,cusID);	
+				}
+				else {
+					dispose();
+					Items frame = new Items(cusID);
+					frame.setUndecorated(true);
+					frame.setVisible(true);
+				}
+				
+			
+				
+				
+				
+				  
+	    	  
 			}}
 		);
-		button.setBackground(new Color(255, 250, 205));
-		button.setForeground(Color.BLACK);
-		button.setFont(new Font("Monospaced", Font.BOLD, 20));
-		button.setBounds(0, 0, 140, 36);
-		panel_3_1_1.add(button);
+		placeBidButton.setBackground(new Color(255, 250, 205));
+		placeBidButton.setForeground(Color.BLACK);
+		placeBidButton.setFont(new Font("Monospaced", Font.BOLD, 20));
+		placeBidButton.setBounds(0, 0, 140, 36);
+		panel_3_1_1.add(placeBidButton);
+		
+		JLabel lblNewLabel_4_1 = new JLabel(" ENDS AT :");
+		lblNewLabel_4_1.setFont(new Font("Monospaced", Font.BOLD, 20));
+		lblNewLabel_4_1.setBounds(324, 42, 127, 50);
+		panel_4_2.add(lblNewLabel_4_1);
+		
+		
 		
 	
 		
@@ -269,11 +291,17 @@ public class Bidding extends JFrame {
 		lblNewLabel_5.setBounds(0, 0, 640, 50);
 		panel_4_2_1.add(lblNewLabel_5);
 		
-		Panel panel_4_2_1_1 = new Panel();
-		panel_4_2_1_1.setLayout(null);
-		panel_4_2_1_1.setBackground(new Color(255, 250, 205));
-		panel_4_2_1_1.setBounds(5, 60, 640, 40);
-		panel_4_1_1.add(panel_4_2_1_1);
+		Panel highest_1 = new Panel();
+		highest_1.setLayout(null);
+		highest_1.setBackground(new Color(255, 250, 205));
+		highest_1.setBounds(5, 60, 640, 40);
+		panel_4_1_1.add(highest_1);
+		
+		Highest_1 = new JLabel();
+		Highest_1.setHorizontalAlignment(SwingConstants.LEFT);
+		Highest_1.setFont(new Font("Monospaced", Font.BOLD, 20));
+		Highest_1.setBounds(0, 0, 640, 40);
+		highest_1.add(Highest_1);
 		
 		Panel panel_4_2_1_2 = new Panel();
 		panel_4_2_1_2.setLayout(null);
@@ -281,11 +309,23 @@ public class Bidding extends JFrame {
 		panel_4_2_1_2.setBounds(5, 105, 640, 40);
 		panel_4_1_1.add(panel_4_2_1_2);
 		
+		Highest_2 = new JLabel("");
+		Highest_2.setHorizontalAlignment(SwingConstants.LEFT);
+		Highest_2.setFont(new Font("Monospaced", Font.BOLD, 20));
+		Highest_2.setBounds(0, 0, 640, 40);
+		panel_4_2_1_2.add(Highest_2);
+		
 		Panel panel_4_2_1_3 = new Panel();
 		panel_4_2_1_3.setLayout(null);
 		panel_4_2_1_3.setBackground(new Color(255, 250, 205));
 		panel_4_2_1_3.setBounds(5, 150, 640, 40);
 		panel_4_1_1.add(panel_4_2_1_3);
+		
+		Highest_3 = new JLabel("\r\n");
+		Highest_3.setHorizontalAlignment(SwingConstants.LEFT);
+		Highest_3.setFont(new Font("Monospaced", Font.BOLD, 20));
+		Highest_3.setBounds(0, 0, 640, 40);
+		panel_4_2_1_3.add(Highest_3);
 		
 		Panel panel_2_1_1_1 = new Panel();
 		panel_2_1_1_1.setLayout(null);
@@ -310,6 +350,11 @@ public class Bidding extends JFrame {
 			public void mouseExited(MouseEvent e) {
 				panel_2_1_1_1.setBackground(Color.BLACK);
 				panel_3_1_1_1.setBackground(new Color(255, 250, 205));
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				highestBids(itemID);
+				
 			}
 		});
 		lblNewLabel_3_1_1_1.setHorizontalAlignment(SwingConstants.CENTER);
@@ -375,7 +420,7 @@ public class Bidding extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				dispose();
-				Items frame = new Items();
+				Items frame = new Items(cusID);
 				frame.setUndecorated(true);
 				frame.setVisible(true);
 			}
@@ -391,11 +436,202 @@ public class Bidding extends JFrame {
 		return Name = "   NAME : "+ Name;
 		
 	}
-	public String addStartBid(String bid) {
-		return bid = "   START BID : "+bid;
+	public String addStartBid(double startBid) {
+		String sbid = String.valueOf(startBid); 
+		return sbid = "   START BID : $"+sbid;
 		
 	}
-  
 	
+	public void placeBid(int itemID,int cusID) {
+		 double currentBid = 0.0;
+		 double itemStartPrice = 0.0;
+		 boolean sold = false;
+		 dateFormat = new SimpleDateFormat("HH:mm:ss");
+		 date = new Date();
+		 currentAfterAdded = new Date();
+		 createConnection();
+		
+		 
+		 
+		 
+		if(bidField.getText().isEmpty()) {
+			handleErr("Enter your bid price");
+			return;
+		}
+	    currentBid = Double.parseDouble(bidField.getText());
+	    try {
+	    	 Statement state = con.createStatement();
+	    	 ResultSet done2 = state.executeQuery("select * from timeKeeper where itemID = '"+itemID+"'");
+			  while(done2.next()) {
+				sold = done2.getBoolean("isSold");
+				 java.sql.Time f1 = done2.getTime("stopTime"); 
+				 currentAfterAdded = new Date(f1.getTime());
+			  }
+			  if(dateFormat.parse(dateFormat.format(date)).after(dateFormat.parse(dateFormat.format(currentAfterAdded)))) {
+				System.out.println("Item sold do something");
+				startTime.setText("SOLD !");
+		        endTime.setText("SOLD !");
+		        placeBidButton.setLabel(" BACK\r\n");
+		        
+		        PreparedStatement prestate = con.prepareStatement("UPDATE timeKeeper SET  isSold = ?  WHERE itemID = ?");
+				prestate.setBoolean(1, true);
+				prestate.setInt(2, itemID);
+				prestate.execute();
+				
+				  
+		        PreparedStatement restate = con.prepareStatement("UPDATE aucItems SET  onScreenNow = false  WHERE itemID = ?");
+                restate.setInt(1, itemID);
+				restate.execute();
+			    System.out.println("Update done");
+				return;
+			  }
+			 
+			
+			ResultSet item = state.executeQuery("select * from aucitems where itemID = '"+ itemID +"'");
+			
+			while(item.next()) {
+				  itemStartPrice = item.getDouble("itemPrice");
+				  }
+		  if(currentBid <=  itemStartPrice) {
+			  handleErr("You dont have money for this");
+			return;
+		  }
+		  PreparedStatement prestate = con.prepareStatement("INSERT INTO bids (cusID,itemID,bidAmount) VALUES (?,?,?)");
+		  prestate.setInt(1, cusID);
+		  prestate.setInt(2, itemID);
+		  prestate.setDouble(3, currentBid);
+		  prestate.execute();
+		  setTime(itemID);
+		  highestBids(itemID);
+		 
+		} catch (SQLException | ParseException e) {
+			e.printStackTrace();
+		}
+	    
+	}
 	
+	public void highestBids(int itemID) {
+		String[] cusName = new String[100] ;
+		double[] bidAmount = new double[100];
+		String cusBid = null;
+		int count = 0;
+		createConnection();
+		 try {
+				Statement state = con.createStatement();
+				ResultSet hbids = state.executeQuery("SELECT bids.bidID, customers.cusName, aucItems.itemID, bids.bidAmount FROM ((bids "
+						+ "INNER JOIN Customers ON bids.cusID = customers.cusID) INNER JOIN aucItems ON bids.itemID = aucItems.itemID)"
+						+ "where aucItems.itemID = '"+itemID+"' ORDER BY bidAmount DESC;");
+				
+				while(hbids.next()) {
+				      cusName[count] = hbids.getString("cusName");
+					  bidAmount[count] = hbids.getDouble("bidAmount");
+					  count++;
+					  }
+				
+				Highest_1.setText("\r\n \r\n 1st. "+ cusName[0] +"  - - ->   $"+ bidAmount[0]);
+				Highest_2.setText("\r\n \r\n 2nd. "+ cusName[1] +"  - - ->   $"+ bidAmount[1]);
+				Highest_3.setText("\r\n \r\n 3rd. "+ cusName[2] +"  - - ->   $"+ bidAmount[2]);
+				
+				
+			   
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		    
+		
+	}
+	
+	public void setTime(int itemID) {
+		 createConnection();
+		  ONE_MINUTE_IN_MILLIS = 60000;
+		  currentAfterAdded = new Date();
+		  date = new Date();
+		  long t= date.getTime();
+  		  Date afterAddingMins=new Date(t + (1 * ONE_MINUTE_IN_MILLIS));
+  		  long time = afterAddingMins.getTime();
+  		  dateFormat = new SimpleDateFormat("HH:mm:ss");
+  		  int check = 0;
+  		
+		  try {
+			  Statement state = con.createStatement();
+			  ResultSet done = state.executeQuery("select * from timeKeeper where itemID = '"+itemID+"'");
+			  while(done.next()) {
+				  java.sql.Time f1 = done.getTime("stopTime"); 
+				  currentAfterAdded = new Date(f1.getTime());
+				  check = done.getInt("timeKeeperID");  
+			  }
+			  if(check == 0) {
+					  System.out.println("No Record");  
+					  PreparedStatement prestate = con.prepareStatement("INSERT INTO timeKeeper (itemID,stopTime) VALUES (?,?)");
+					  prestate.setInt(1,itemID);
+					  prestate.setTime(2,new java.sql.Time(time));
+					  prestate.execute();
+			  }
+			  ResultSet done2 = state.executeQuery("select * from timeKeeper where itemID = '"+itemID+"'");
+			  while(done2.next()) {
+				  java.sql.Time f1 = done2.getTime("stopTime"); 
+				  currentAfterAdded = new Date(f1.getTime()); 
+				System.out.println("2nd from database: " + dateFormat.format(currentAfterAdded));
+			  }
+			
+	  	 timer = new Timer(1000, new ActionListener() {
+	    	   @Override
+		          public void actionPerformed(ActionEvent e) {
+	    		 date = new Date();
+   	  	        
+   	  	         
+	    		
+	    		System.out.println(dateFormat.format(currentAfterAdded));
+	    		try {
+	    			if(dateFormat.parse(dateFormat.format(date)).after(dateFormat.parse(dateFormat.format(currentAfterAdded))))
+	    			{
+	    				startTime.setText("SOLD !");
+				        endTime.setText("SOLD !");
+				        placeBidButton.setLabel(" BACK\r\n");
+				        
+				        PreparedStatement prestate = con.prepareStatement("UPDATE timeKeeper SET  isSold = ?  WHERE itemID = ?");
+						prestate.setBoolean(1, true);
+						prestate.setInt(2, itemID);
+						prestate.execute();
+					    System.out.println("Update done");
+	    				
+					    timer.stop();
+	    				return;
+	    			}else{
+	    				startTime.setText(dateFormat.format(date));
+				        endTime.setText(dateFormat.format(currentAfterAdded));
+	    			
+	    			}
+	    		} catch (ParseException | SQLException e1) {
+	    		
+	    			e1.printStackTrace();
+	    		}
+ 
+	         }
+          });
+      timer.start();
+			  
+		  } catch (SQLException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+		}
+	}
+   
+	public void handleErr(String msg) {
+		HandleErr frame = new HandleErr(msg);
+		frame.setUndecorated(true);
+		frame.setVisible(true);
+		
+	}
+	
+	public void createConnection(){
+		try {
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/auction","root","root"); 
+			System.out.println("DATABASE CONNECTED SUCCESS");
+		} catch (ClassNotFoundException | SQLException  e) {
+			System.out.println(e);
+			e.printStackTrace();
+		}  
+	}
 }

@@ -217,7 +217,7 @@ public class Login extends JFrame {
 		prestate.setBoolean(1, true);
 		prestate.setInt(2, ID);
 		prestate.execute();
-		callItemsframe();
+		callItemsframe(ID);
 		
 	   System.out.println("loggedin");
 	} catch (SQLException e) {
@@ -246,9 +246,10 @@ public class Login extends JFrame {
 		}  
 	}
 	
-	public void callItemsframe() {
+	public void callItemsframe(int cusID) {
 		dispose();
-		Items frame = new Items();
+		Items frame = new Items(cusID);
+		System.out.println(cusID);
 		frame.setUndecorated(true);
 		frame.setVisible(true);
 	}
