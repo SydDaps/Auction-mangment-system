@@ -20,9 +20,13 @@ import java.awt.GridLayout;
 import java.awt.event.MouseMotionAdapter;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Items extends JFrame {
 
@@ -32,6 +36,8 @@ public class Items extends JFrame {
     Connection con;
     int[] item = new int[100];
     int[] sold = new int[100];
+    Date date ,currentAfterAdded;
+    SimpleDateFormat dateFormat;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -265,11 +271,10 @@ public class Items extends JFrame {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
-				
+				callBiddingFrame(item[5],cusID);
 			}
 		});
-		lblNewLabel_2_7.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/5.jpg")));
+		lblNewLabel_2_7.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/"+item[5]+".jpg")));
 		lblNewLabel_2_7.setBounds(0, 0, 290, 190);
 		panel_4_7.add(lblNewLabel_2_7);
 		
@@ -295,8 +300,12 @@ public class Items extends JFrame {
 			public void mouseExited(MouseEvent e) {
 				panel_1_5.setBackground(new Color(0, 0, 0));
 			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				callBiddingFrame(item[6],cusID);
+			}
 		});
-		lblNewLabel_2_6.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/minature piano.jpg")));
+		lblNewLabel_2_6.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/"+item[6]+".jpg")));
 		lblNewLabel_2_6.setBounds(0, 0, 290, 190);
 		panel_4_6.add(lblNewLabel_2_6);
 		
@@ -324,10 +333,10 @@ public class Items extends JFrame {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
+				callBiddingFrame(item[7],cusID);
 			}
 		});
-		lblNewLabel_2_6_4.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/7.jpg")));
+		lblNewLabel_2_6_4.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/"+item[7]+".jpg")));
 		lblNewLabel_2_6_4.setBounds(0, 0, 290, 190);
 		panel_4_5.add(lblNewLabel_2_6_4);
 		
@@ -353,8 +362,12 @@ public class Items extends JFrame {
 			public void mouseExited(MouseEvent e) {
 				panel_1_7.setBackground(new Color(0, 0, 0));
 			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				callBiddingFrame(item[8],cusID);
+			}
 		});
-		lblNewLabel_2_4.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/pearl earings.jpg")));
+		lblNewLabel_2_4.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/"+item[8]+".jpg")));
 		lblNewLabel_2_4.setBounds(0, 0, 290, 190);
 		panel_4_4.add(lblNewLabel_2_4);
 		
@@ -371,7 +384,7 @@ public class Items extends JFrame {
 		panel_1_4_1.add(panel_4_8);
 		
 		JLabel lblNewLabel_2_8 = new JLabel("");
-		lblNewLabel_2_8.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/tele.jpg")));
+		lblNewLabel_2_8.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/"+item[9]+".jpg")));
 		lblNewLabel_2_8.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -383,7 +396,7 @@ public class Items extends JFrame {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
+				callBiddingFrame(item[9],cusID);
 			}
 		});
 		lblNewLabel_2_8.setBounds(0, 0, 290, 190);
@@ -402,7 +415,7 @@ public class Items extends JFrame {
 		panel_1_5_1.add(panel_4_6_1);
 		
 		JLabel lblNewLabel_2_6_1 = new JLabel("");
-		lblNewLabel_2_6_1.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/ian-dooley-_qnUxz2bCJE-unsplash.jpg")));
+		lblNewLabel_2_6_1.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/"+item[10]+".jpg")));
 		lblNewLabel_2_6_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -411,6 +424,10 @@ public class Items extends JFrame {
 			@Override
 			public void mouseExited(MouseEvent e) {
 				panel_1_5_1.setBackground(new Color(0, 0, 0));
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				callBiddingFrame(item[10],cusID);
 			}
 		});
 		lblNewLabel_2_6_1.setBounds(0, 0, 290, 190);
@@ -429,7 +446,7 @@ public class Items extends JFrame {
 		panel_1_5_2.add(panel_4_6_2);
 		
 		JLabel lblNewLabel_2_6_2 = new JLabel("");
-		lblNewLabel_2_6_2.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/clock.jpg")));
+		lblNewLabel_2_6_2.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/"+item[11]+".jpg")));
 		lblNewLabel_2_6_2.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -438,6 +455,10 @@ public class Items extends JFrame {
 			@Override
 			public void mouseExited(MouseEvent e) {
 				panel_1_5_2.setBackground(new Color(0, 0, 0));
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				callBiddingFrame(item[11],cusID);
 			}
 		});
 		lblNewLabel_2_6_2.setBounds(0, 0, 290, 190);
@@ -456,7 +477,7 @@ public class Items extends JFrame {
 		panel_1_5_3.add(panel_4_6_3);
 		
 		JLabel lblNewLabel_2_6_3 = new JLabel("");
-		lblNewLabel_2_6_3.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/oldComp.jpg")));
+		lblNewLabel_2_6_3.setIcon(new ImageIcon(Items.class.getResource("/images/itemsimg/"+item[12]+".jpg")));
 		lblNewLabel_2_6_3.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
@@ -468,7 +489,7 @@ public class Items extends JFrame {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
+				callBiddingFrame(item[12],cusID);
 			}
 		});
 		lblNewLabel_2_6_3.setBounds(0, 0, 290, 190);
@@ -498,6 +519,13 @@ public class Items extends JFrame {
 			public void mouseExited(MouseEvent e) {
 				panel_2.setBackground(Color.BLACK);
 				panel_3.setBackground(new Color(255, 250, 205));
+			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				dispose();
+				Home frame = new Home();
+				frame.setUndecorated(true);
+				frame.setVisible(true);
 			}
 		});
 		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
@@ -529,6 +557,10 @@ public class Items extends JFrame {
 			panel_2_1.setBackground(Color.BLACK);
 			panel_3_1.setBackground(new Color(255, 250, 205));
 			}
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				callbidsHistory(cusID);
+			}
 		});
 		lblNewLabel_3_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_3_1.setFont(new Font("Monospaced", Font.BOLD, 20));
@@ -538,45 +570,70 @@ public class Items extends JFrame {
 	 
 	}
 	public void checkAndRelpaceItem() {
+		 dateFormat = new SimpleDateFormat("HH:mm:ss");
+		 date = new Date();
+		 currentAfterAdded = new Date();
 		createConnection();
 		int num = 1;
 		int num2 = 1;
-		int start = 1;
-		int[] tryy = {11,12,13,14,15,16,17,18,10,10};
+		double maxPriceAM = 0;
+		
+
 		
 		try {
+			Statement rstate = con.createStatement();
+			Statement estate = con.createStatement();
+	    	 ResultSet done2 = estate.executeQuery("select * from timeKeeper");
+			  while(done2.next()) {
+				//sold = done2.getBoolean("isSold");
+				 date = new Date();
+				 java.sql.Time f1 = done2.getTime("stopTime"); 
+				 currentAfterAdded = new Date(f1.getTime());
+				 int itemID = done2.getInt("itemID");
+				 
+				 if(dateFormat.parse(dateFormat.format(date)).after(dateFormat.parse(dateFormat.format(currentAfterAdded)))) {
+					 PreparedStatement prestate = con.prepareStatement("UPDATE timeKeeper SET  isSold = ?  WHERE itemID = ?");
+						prestate.setBoolean(1, true);
+						prestate.setInt(2, itemID);
+						prestate.execute();
+						
+						  
+				        PreparedStatement restate = con.prepareStatement("UPDATE aucItems SET  onScreenNow = false  WHERE itemID = ?");
+		                restate.setInt(1, itemID);
+						restate.execute();
+						
+						ResultSet maxPrice = rstate.executeQuery("SELECT bids.bidID, customers.cusName, aucItems.itemID, MAX(bids.bidAmount) FROM ((bids "
+								+ "INNER JOIN Customers ON bids.cusID = customers.cusID) INNER JOIN aucItems ON bids.itemID = aucItems.itemID)"
+								+ "where aucItems.itemID = '"+itemID+"'");
+					    while(maxPrice.next()) {
+					    	System.out.print("here");
+						  maxPriceAM = maxPrice.getDouble("MAX(bids.bidAmount)");
+					     }
+					
+					    PreparedStatement testate = con.prepareStatement("UPDATE bids SET  isSuccess = true  WHERE bidAmount = ?");
+		                testate.setDouble(1, maxPriceAM);
+				        testate.execute();
+						
+					 	 
+				 }
+			  }
+			
+			
+			
+			
+			
+			
+			
 			Statement state = con.createStatement();
-			ResultSet soldItems = state.executeQuery("SELECT timeKeeper.itemID,  aucItems.itemID, timeKeeper.isSold"
-					+ " FROM (timeKeeper "
-					+ "INNER JOIN aucItems ON timeKeeper.itemID = aucItems.itemID)"
-					+ " where isSold = true");
-            while(soldItems.next()) {
-            	tryy[num2] = soldItems.getInt("itemID");
-            	System.out.println(num2+" 333= "+tryy[num2]);
-            	num2++;
-            	}
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			ResultSet items = state.executeQuery("select * from aucitems where onScreenNow = true");
             while(items.next()) {
             	item[num] = items.getInt("itemID");
-            	System.out.println(num + " = "+item[num]);
             	num++;
             	}
             	
             	
-            	
-            
-			
-		} catch (SQLException e) {
+     	
+		} catch (SQLException | ParseException e) {
 			e.printStackTrace();
 		}
 	}
@@ -589,6 +646,17 @@ public class Items extends JFrame {
 		
 		
 		try {
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 			Statement state = con.createStatement();
 			ResultSet item = state.executeQuery("select * from aucitems where itemID = '"+ itemID +"'");
 			
@@ -606,13 +674,21 @@ public class Items extends JFrame {
 			e.printStackTrace();
 		}
 	}
+
 	
+	public void callbidsHistory(int cusID) {
+		dispose();
+		bidsHistory frame = new bidsHistory(cusID);
+		frame.setUndecorated(true);
+		frame.setVisible(true);
+	}
 	public void handleErr(String msg) {
 		HandleErr frame = new HandleErr(msg);
 		frame.setUndecorated(true);
 		frame.setVisible(true);
 		
 	}
+	
 	
 	public void createConnection(){
 		try {

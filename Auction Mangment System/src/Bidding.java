@@ -36,14 +36,14 @@ public class Bidding extends JFrame {
 	private JPanel contentPane;
 	private JTextField bidField;
 	public Timer timer;
-	int xx,xy,min,sec,stop;
+	int xx,xy,min,sec,stop,maxPriceID;
 	Connection con;
     JLabel Highest_1,Highest_2 ,Highest_3, startTime , endTime ;
     long ONE_MINUTE_IN_MILLIS;
     Date date ,currentAfterAdded;
     SimpleDateFormat dateFormat;
     Button placeBidButton;
-	
+    double maxPriceAM;
 	/**
 	 * Launch the application.
 	 */
@@ -243,8 +243,14 @@ public class Bidding extends JFrame {
 		placeBidButton = new Button(" PLACE BID\r\n");
 		placeBidButton.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				//highestBids(itemID);
+			public void mouseEntered(MouseEvent e) {
+				panel_2_1_1.setBackground(Color.WHITE);	
+				placeBidButton.setBackground(new Color(238, 232, 170));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				panel_2_1_1.setBackground(Color.BLACK);
+				placeBidButton.setBackground(new Color(255, 250, 205));
 			}
 		});
 		min = 2;
@@ -386,6 +392,13 @@ public class Bidding extends JFrame {
 				panel_2.setBackground(Color.BLACK);
 				panel_3.setBackground(new Color(255, 250, 205));
 			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				dispose();
+				Home frame = new Home();
+				frame.setUndecorated(true);
+				frame.setVisible(true);
+			}
 		});
 		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_3.setFont(new Font("Monospaced", Font.BOLD, 20));
@@ -450,6 +463,8 @@ public class Bidding extends JFrame {
 		 date = new Date();
 		 currentAfterAdded = new Date();
 		 createConnection();
+		 maxPriceID = 0;
+		 maxPriceAM = 0;
 		
 		 
 		 
@@ -482,7 +497,17 @@ public class Bidding extends JFrame {
 		        PreparedStatement restate = con.prepareStatement("UPDATE aucItems SET  onScreenNow = false  WHERE itemID = ?");
                 restate.setInt(1, itemID);
 				restate.execute();
-			    System.out.println("Update done");
+				
+				ResultSet maxPrice = state.executeQuery("SELECT bids.bidID, customers.cusName, aucItems.itemID, MAX(bids.bidAmount) FROM ((bids "
+						+ "INNER JOIN Customers ON bids.cusID = customers.cusID) INNER JOIN aucItems ON bids.itemID = aucItems.itemID)"
+						+ "where aucItems.itemID = '"+itemID+"'");
+			    while(maxPrice.next()) {
+			    	  maxPriceAM = maxPrice.getDouble("MAX(bids.bidAmount)");
+			     }
+			
+			    PreparedStatement testate = con.prepareStatement("UPDATE bids SET  isSuccess = true  WHERE bidAmount = ?");
+               testate.setDouble(1, maxPriceAM);
+		        testate.execute();
 				return;
 			  }
 			 
@@ -493,7 +518,7 @@ public class Bidding extends JFrame {
 				  itemStartPrice = item.getDouble("itemPrice");
 				  }
 		  if(currentBid <=  itemStartPrice) {
-			  handleErr("You dont have money for this");
+			  handleErr("Top Up to place Bid");
 			return;
 		  }
 		  PreparedStatement prestate = con.prepareStatement("INSERT INTO bids (cusID,itemID,bidAmount) VALUES (?,?,?)");
@@ -551,6 +576,8 @@ public class Bidding extends JFrame {
   		  long time = afterAddingMins.getTime();
   		  dateFormat = new SimpleDateFormat("HH:mm:ss");
   		  int check = 0;
+  		  maxPriceID = 0;
+  		  maxPriceAM = 0;
   		
 		  try {
 			  Statement state = con.createStatement();
@@ -571,7 +598,6 @@ public class Bidding extends JFrame {
 			  while(done2.next()) {
 				  java.sql.Time f1 = done2.getTime("stopTime"); 
 				  currentAfterAdded = new Date(f1.getTime()); 
-				System.out.println("2nd from database: " + dateFormat.format(currentAfterAdded));
 			  }
 			
 	  	 timer = new Timer(1000, new ActionListener() {
@@ -579,9 +605,6 @@ public class Bidding extends JFrame {
 		          public void actionPerformed(ActionEvent e) {
 	    		 date = new Date();
    	  	        
-   	  	         
-	    		
-	    		System.out.println(dateFormat.format(currentAfterAdded));
 	    		try {
 	    			if(dateFormat.parse(dateFormat.format(date)).after(dateFormat.parse(dateFormat.format(currentAfterAdded))))
 	    			{
@@ -593,8 +616,24 @@ public class Bidding extends JFrame {
 						prestate.setBoolean(1, true);
 						prestate.setInt(2, itemID);
 						prestate.execute();
-					    System.out.println("Update done");
-	    				
+					    
+						 PreparedStatement restate = con.prepareStatement("UPDATE aucItems SET  onScreenNow = false  WHERE itemID = ?");
+			             restate.setInt(1, itemID);
+					     restate.execute();
+					   
+					     Statement state = con.createStatement();
+						 
+					     ResultSet maxPrice = state.executeQuery("SELECT bids.bidID, customers.cusName, aucItems.itemID, MAX(bids.bidAmount) FROM ((bids "
+									+ "INNER JOIN Customers ON bids.cusID = customers.cusID) INNER JOIN aucItems ON bids.itemID = aucItems.itemID)"
+									+ "where aucItems.itemID = '"+itemID+"'");
+						while(maxPrice.next()) {
+							  maxPriceAM = maxPrice.getDouble("MAX(bids.bidAmount)");
+					     }
+					
+					    PreparedStatement testate = con.prepareStatement("UPDATE bids SET  isSuccess = true  WHERE bidAmount = ?");
+		                testate.setDouble(1, maxPriceAM);
+				        testate.execute();
+					    
 					    timer.stop();
 	    				return;
 	    			}else{

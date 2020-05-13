@@ -130,7 +130,7 @@ public class Login extends JFrame {
 		
 		userNameField = new JTextField();
 		userNameField.setForeground(new Color(0, 0, 0));
-		userNameField.setFont(new Font("Bradley Hand ITC", Font.BOLD, 17));
+		userNameField.setFont(new Font("Monospaced", Font.BOLD, 18));
 		userNameField.setBounds(3, 3, 459, 40);
 		panel.add(userNameField);
 		userNameField.setColumns(10);
