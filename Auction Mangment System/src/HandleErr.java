@@ -43,7 +43,8 @@ public class HandleErr extends JFrame {
 	public HandleErr(String msg) {
 		setBackground(Color.WHITE);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 600, 250);
+		setBounds(100, 100, 650, 300);
+
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 250, 205));
 		contentPane.setBorder(new LineBorder(new Color(0, 0, 0), 10, true));
@@ -74,7 +75,7 @@ public class HandleErr extends JFrame {
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setToolTipText("");
 		lblNewLabel_1.setFont(new Font("Monospaced", Font.BOLD, 30));
-		lblNewLabel_1.setBounds(93, 70, 405, 58);
+		lblNewLabel_1.setBounds(12, 83, 608, 82);
 		contentPane.add(lblNewLabel_1);
 		
 		JLabel lblX = new JLabel(" X");
@@ -88,7 +89,7 @@ public class HandleErr extends JFrame {
 		lblX.setForeground(Color.BLACK);
 		lblX.setFont(new Font("Broadway", Font.BOLD, 20));
 		lblX.setBackground(new Color(0, 0, 139));
-		lblX.setBounds(540, 13, 30, 34);
+		lblX.setBounds(590, 13, 30, 34);
 		contentPane.add(lblX);
 		
 	}

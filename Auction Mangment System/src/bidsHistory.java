@@ -110,7 +110,7 @@ public class bidsHistory extends JFrame {
 		JLabel lblNewLabel_1 = new JLabel("  BIDS ");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel_1.setFont(new Font("Monospaced", Font.BOLD, 40));
-		lblNewLabel_1.setBounds(547, 26, 365, 59);
+		lblNewLabel_1.setBounds(629, 25, 365, 59);
 		contentPane.add(lblNewLabel_1);
 		
 		JPanel panel = new JPanel();
@@ -231,9 +231,9 @@ public class bidsHistory extends JFrame {
 		try {
 			Statement state = con.createStatement();
 			ResultSet bids,sbids;
-			bids = state.executeQuery("SELECT  customers.cusName, aucItems.itemNAME, bids.bidAmount , bids.isSuccess FROM ((bids"
+			bids = state.executeQuery("SELECT aucItems.itemID ,customers.cusName, aucItems.itemNAME, bids.bidAmount , bids.isSuccess FROM ((bids"
 					+ " INNER JOIN Customers ON bids.cusID = customers.cusID) INNER JOIN aucItems ON bids.itemID = aucItems.itemID)"
-					+ " ORDER BY bidID DESC;");
+					+ " ORDER BY aucItems.itemID, bidID DESC");
 			while(bids.next()) {
 				if(b < 11) {
 				   if(bids.getBoolean("isSuccess") == true) {
@@ -259,7 +259,7 @@ public class bidsHistory extends JFrame {
 			}
 			b = 0;
 			count2 = 61;
-			sbids = state.executeQuery("SELECT  customers.cusName, aucItems.itemNAME, bids.bidAmount FROM ((bids"
+			sbids = state.executeQuery("SELECT aucItems.itemID, customers.cusName, aucItems.itemNAME, bids.bidAmount FROM ((bids"
 					+ " INNER JOIN Customers ON bids.cusID = customers.cusID) INNER JOIN aucItems ON bids.itemID = aucItems.itemID)"
 					+ "where customers.cusID = '"+ cusID +"' and isSuccess = true"
 					+ " ORDER BY bidID DESC;");

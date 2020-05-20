@@ -84,6 +84,9 @@ public class Items extends JFrame {
 				 xx = e.getX();
 			     xy = e.getY();
 			}
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
 		});
 		lblNewLabel.setIcon(new ImageIcon(Items.class.getResource("/images/money (1).png")));
 		lblNewLabel.setBounds(26, 13, 69, 72);
@@ -113,7 +116,7 @@ public class Items extends JFrame {
 		
 		JLabel lblNewLabel_1 = new JLabel(" AUCTION ITEMS");
 		lblNewLabel_1.setFont(new Font("Monospaced", Font.BOLD, 40));
-		lblNewLabel_1.setBounds(547, 26, 365, 59);
+		lblNewLabel_1.setBounds(629, 25, 365, 59);
 		contentPane.add(lblNewLabel_1);
 		
 		JPanel panel = new JPanel();
@@ -606,7 +609,6 @@ public class Items extends JFrame {
 								+ "INNER JOIN Customers ON bids.cusID = customers.cusID) INNER JOIN aucItems ON bids.itemID = aucItems.itemID)"
 								+ "where aucItems.itemID = '"+itemID+"'");
 					    while(maxPrice.next()) {
-					    	System.out.print("here");
 						  maxPriceAM = maxPrice.getDouble("MAX(bids.bidAmount)");
 					     }
 					

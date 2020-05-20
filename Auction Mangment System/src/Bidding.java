@@ -127,7 +127,7 @@ public class Bidding extends JFrame {
 			}
 		});
 		lblNewLabel_1.setFont(new Font("Monospaced", Font.BOLD, 40));
-		lblNewLabel_1.setBounds(648, 26, 213, 59);
+		lblNewLabel_1.setBounds(699, 26, 213, 59);
 		contentPane.add(lblNewLabel_1);
 		
 		JPanel panel = new JPanel();
@@ -173,9 +173,9 @@ public class Bidding extends JFrame {
 		lblNewLabel_4.setBounds(5, 5, 527, 50);
 		panel_4_2.add(lblNewLabel_4);
 		
-		JLabel startLable = new JLabel("  STARTED :\r\n");
+		JLabel startLable = new JLabel("   STARTED :\r\n");
 		startLable.setFont(new Font("Monospaced", Font.BOLD, 20));
-		startLable.setBounds(5, 42, 137, 50);
+		startLable.setBounds(5, 42, 150, 50);
 		panel_4_2.add(startLable);
 		
 		JLabel lblNewLabel_4_2 = new JLabel(addStartBid(startPrice));
@@ -220,12 +220,12 @@ public class Bidding extends JFrame {
 		
 		startTime = new JLabel("");
 		startTime.setFont(new Font("Monospaced", Font.BOLD, 30));
-		startTime.setBounds(142, 42, 179, 50);
+		startTime.setBounds(167, 42, 176, 50);
 		panel_4_2.add(startTime);
 		
 		endTime = new JLabel("");
 		endTime.setFont(new Font("Monospaced", Font.BOLD, 30));
-		endTime.setBounds(484, 42, 144, 50);
+		endTime.setBounds(469, 42, 144, 50);
 		panel_4_2.add(endTime);
 		
 		Panel panel_4_1_1 = new Panel();
@@ -284,7 +284,7 @@ public class Bidding extends JFrame {
 		
 		JLabel lblNewLabel_4_1 = new JLabel(" ENDS AT :");
 		lblNewLabel_4_1.setFont(new Font("Monospaced", Font.BOLD, 20));
-		lblNewLabel_4_1.setBounds(324, 42, 127, 50);
+		lblNewLabel_4_1.setBounds(344, 42, 127, 50);
 		panel_4_2.add(lblNewLabel_4_1);
 		
 		
@@ -465,15 +465,18 @@ public class Bidding extends JFrame {
 		 createConnection();
 		 maxPriceID = 0;
 		 maxPriceAM = 0;
+		 double currentMaxPrice = 0;
 		
 		 
-		 
-		 
+	//Before a bid is placed check is the field is empty and handle error 	 
 		if(bidField.getText().isEmpty()) {
 			handleErr("Enter your bid price");
 			return;
 		}
+	//if Not get current Bid price from Text Field  
 	    currentBid = Double.parseDouble(bidField.getText());
+	    
+	//Now check from time keeper if time is up and update required fields 
 	    try {
 	    	 Statement state = con.createStatement();
 	    	 ResultSet done2 = state.executeQuery("select * from timeKeeper where itemID = '"+itemID+"'");
@@ -512,6 +515,7 @@ public class Bidding extends JFrame {
 			  }
 			 
 			
+	//checking if currentBid is lesser than the strat bid to throw an error 
 			ResultSet item = state.executeQuery("select * from aucitems where itemID = '"+ itemID +"'");
 			
 			while(item.next()) {
@@ -521,6 +525,20 @@ public class Bidding extends JFrame {
 			  handleErr("Top Up to place Bid");
 			return;
 		  }
+  //Now we will get the maximum bid and make sure you bid is higher to continue	  
+		  ResultSet MaxbidNow = state.executeQuery("SELECT bids.bidID, customers.cusName, aucItems.itemID, bids.bidAmount FROM ((bids "
+					+ "INNER JOIN Customers ON bids.cusID = customers.cusID) INNER JOIN aucItems ON bids.itemID = aucItems.itemID)"
+					+ "where aucItems.itemID = '"+itemID+"' ");
+		  while(MaxbidNow.next()) {
+			  currentMaxPrice = MaxbidNow.getDouble("bids.bidAmount");
+			  
+		  }
+		 if( currentBid <=  currentMaxPrice &&  currentMaxPrice != 0) {
+			 handleErr("Place Bid higher than $"+ currentMaxPrice);
+				return;
+		 }
+		  
+		
 		  PreparedStatement prestate = con.prepareStatement("INSERT INTO bids (cusID,itemID,bidAmount) VALUES (?,?,?)");
 		  prestate.setInt(1, cusID);
 		  prestate.setInt(2, itemID);

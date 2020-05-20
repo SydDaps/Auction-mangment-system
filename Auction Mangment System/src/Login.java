@@ -77,16 +77,11 @@ public class Login extends JFrame {
 				 xx = e.getX();
 			     xy = e.getY();
 			}
-		});
-		lblNewLabel.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				dispose();
-				Home home = new Home();
-				home.setUndecorated(true);	
-				home.setVisible(true);
+			public void mouseClicked(MouseEvent arg0) {
 			}
 		});
+		
 		lblNewLabel.setIcon(new ImageIcon(Login.class.getResource("/images/money (1).png")));
 		lblNewLabel.setBounds(12, 13, 69, 72);
 		contentPane.add(lblNewLabel);
@@ -130,7 +125,7 @@ public class Login extends JFrame {
 		
 		userNameField = new JTextField();
 		userNameField.setForeground(new Color(0, 0, 0));
-		userNameField.setFont(new Font("Monospaced", Font.BOLD, 18));
+		userNameField.setFont(new Font("Monospaced", Font.BOLD, 20));
 		userNameField.setBounds(3, 3, 459, 40);
 		panel.add(userNameField);
 		userNameField.setColumns(10);

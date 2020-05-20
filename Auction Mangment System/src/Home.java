@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Button;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.Panel;
 import javax.swing.JTextPane;
 import javax.swing.JTextField;
@@ -91,8 +92,9 @@ public class Home extends JFrame {
 		lblNewLabel_1.setBackground(new Color(255, 255, 255));
 		contentPane.add(lblNewLabel_1);
 		
-		JLabel lblNewLabel_2 = new JLabel("KBOX AUCTIONS ");
-		lblNewLabel_2.setBounds(168, 25, 314, 56);
+		JLabel lblNewLabel_2 = new JLabel(" KBOX AUCTIONS ");
+		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_2.setBounds(168, 25, 345, 56);
 		lblNewLabel_2.setFont(new Font("Monospaced", Font.BOLD, 36));
 		contentPane.add(lblNewLabel_2);
 		
@@ -191,7 +193,7 @@ public class Home extends JFrame {
 		lblAbout.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				DateStuff();
+			
 			}
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
@@ -234,33 +236,7 @@ public class Home extends JFrame {
 		
 		
 	}
-	public void DateStuff() {
-//		 SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");  
-//		    Date date = new Date();  
-//		    long timeMilli = date.getTime() - ;
-//		    long time1 = 
-//		    System.out.println(formatter.format(date));  
-//		    System.out.println(timeMilli);
-		final long ONE_MINUTE_IN_MILLIS = 60000;
-		Date date = new Date();
-		SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm") ;
-		dateFormat.format(date);
-		System.out.println(dateFormat.format(date));
-		
-		long t= date.getTime();
-		Date afterAddingTenMins=new Date(t + (50 * ONE_MINUTE_IN_MILLIS));
-		System.out.println(dateFormat.format(afterAddingTenMins));
-		try {
-			if(dateFormat.parse(dateFormat.format(date)).after(dateFormat.parse("23:26")))
-			{
-			    System.out.println("Current time is greater than 11.20");
-			}else{
-			    System.out.println("Current time is less than 11.20");
-			}
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		    
-	}
+	
+	
+	
 }
