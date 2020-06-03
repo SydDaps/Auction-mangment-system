@@ -336,7 +336,7 @@ public class Bidding extends JFrame {
 		Panel panel_2_1_1_1 = new Panel();
 		panel_2_1_1_1.setLayout(null);
 		panel_2_1_1_1.setBackground(Color.BLACK);
-		panel_2_1_1_1.setBounds(1009, 554, 150, 46);
+		panel_2_1_1_1.setBounds(940, 554, 150, 46);
 		panel.add(panel_2_1_1_1);
 		
 		Panel panel_3_1_1_1 = new Panel();
@@ -367,6 +367,45 @@ public class Bidding extends JFrame {
 		lblNewLabel_3_1_1_1.setFont(new Font("Monospaced", Font.BOLD, 20));
 		lblNewLabel_3_1_1_1.setBounds(0, 0, 140, 36);
 		panel_3_1_1_1.add(lblNewLabel_3_1_1_1);
+		
+		Panel panel_2_1_2 = new Panel();
+		panel_2_1_2.setLayout(null);
+		panel_2_1_2.setBackground(Color.BLACK);
+		panel_2_1_2.setBounds(1149, 554, 150, 46);
+		panel.add(panel_2_1_2);
+		
+		Panel panel_3_1_2 = new Panel();
+		panel_3_1_2.setLayout(null);
+		panel_3_1_2.setBackground(new Color(255, 250, 205));
+		panel_3_1_2.setBounds(5, 5, 140, 36);
+		panel_2_1_2.add(panel_3_1_2);
+		
+		JLabel UnbidLabel = new JLabel("UNBID");
+		UnbidLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				panel_2_1_2.setBackground(Color.WHITE);	
+				panel_3_1_2.setBackground(new Color(238, 232, 170));
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				panel_2_1_2.setBackground(Color.BLACK);
+				panel_3_1_2.setBackground(new Color(255, 250, 205));
+			}
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+			
+					Unbid(itemID, cusID);
+					dispose();
+					Items frame = new Items(cusID);
+					frame.setUndecorated(true);
+					frame.setVisible(true);
+			}	
+		});
+		UnbidLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		UnbidLabel.setFont(new Font("Monospaced", Font.BOLD, 20));
+		UnbidLabel.setBounds(0, 0, 140, 37);
+		panel_3_1_2.add(UnbidLabel);
 		
 		Panel panel_2 = new Panel();
 		panel_2.setLayout(null);
@@ -408,7 +447,7 @@ public class Bidding extends JFrame {
 		Panel panel_2_1 = new Panel();
 		panel_2_1.setLayout(null);
 		panel_2_1.setBackground(Color.BLACK);
-		panel_2_1.setBounds(1218, 39, 150, 46);
+		panel_2_1.setBounds(1212, 39, 150, 46);
 		contentPane.add(panel_2_1);
 		
 		Panel panel_3_1 = new Panel();
@@ -526,15 +565,16 @@ public class Bidding extends JFrame {
 			return;
 		  }
   //Now we will get the maximum bid and make sure you bid is higher to continue	  
-		  ResultSet MaxbidNow = state.executeQuery("SELECT bids.bidID, customers.cusName, aucItems.itemID, bids.bidAmount FROM ((bids "
+		  ResultSet MaxbidNow = state.executeQuery("SELECT bids.bidID, customers.cusName, aucItems.itemID, MAX(bids.bidAmount) FROM ((bids "
 					+ "INNER JOIN Customers ON bids.cusID = customers.cusID) INNER JOIN aucItems ON bids.itemID = aucItems.itemID)"
 					+ "where aucItems.itemID = '"+itemID+"' ");
 		  while(MaxbidNow.next()) {
-			  currentMaxPrice = MaxbidNow.getDouble("bids.bidAmount");
+			  currentMaxPrice = MaxbidNow.getDouble("MAX(bids.bidAmount)");
 			  
 		  }
-		 if( currentBid <=  currentMaxPrice &&  currentMaxPrice != 0) {
-			 handleErr("Place Bid higher than $"+ currentMaxPrice);
+		 if( currentBid ==  currentMaxPrice &&  currentMaxPrice != 0) {
+			 System.out.print(currentMaxPrice);
+			 handleErr("Bid higher or lesser than $"+ currentMaxPrice);
 				return;
 		 }
 		  
@@ -672,6 +712,22 @@ public class Bidding extends JFrame {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();
 		}
+	}
+	
+	
+	public void Unbid(int itemID,int cusID) {
+		 createConnection();
+		
+		 try {
+			PreparedStatement prestate = con.prepareStatement("DELETE FROM bids WHERE itemID = ? and cusID = ?;");
+			prestate.setInt(1,itemID);
+			prestate.setInt(2,cusID);
+			prestate.execute();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
 	}
    
 	public void handleErr(String msg) {
