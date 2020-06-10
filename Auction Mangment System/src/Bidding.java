@@ -630,7 +630,7 @@ public class Bidding extends JFrame {
 		  currentAfterAdded = new Date();
 		  date = new Date();
 		  long t= date.getTime();
-  		  Date afterAddingMins=new Date(t + (1 * ONE_MINUTE_IN_MILLIS));
+  		  Date afterAddingMins=new Date(t + (2 * ONE_MINUTE_IN_MILLIS));
   		  long time = afterAddingMins.getTime();
   		  dateFormat = new SimpleDateFormat("HH:mm:ss");
   		  int check = 0;
