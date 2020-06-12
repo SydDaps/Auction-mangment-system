@@ -21,4 +21,4 @@ Group 19 designed and implemented an auction application that allows logged in u
   	• Set the lowest bid for each item and reject any bid that is lower than the
   	lowest possible bid.
 	
-link to demo of the application : https://drive.google.com/drive/folders/1qip5IFEmewPzNePGtVIDzIE7Ot6wQZVB?zx=gwjswx8lbq70
+link to demo of the application : https://drive.google.com/drive/folders/1qip5IFEmewPzNePGtVIDzIE7Ot6wQZVB?usp=sharing
